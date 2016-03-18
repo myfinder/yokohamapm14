@@ -1,10 +1,17 @@
 package main
 
 import (
+    "code.google.com/p/go.net/websocket"
     "io"
-    "golang.org/x/net/websocket"
+    "net/http"
 )
 
-func EchoHandler(ws *websocket.Conn) {
+func echoHandler(ws *websocket.Conn) {
     io.Copy(ws, ws)
+}
+
+func main() {
+
+    http.Handle("/", websocket.Handler(echoHandler))
+    http.ListenAndServe(":" + os.Getenv("HTTP_PLATFORM_PORT"), nil)
 }
